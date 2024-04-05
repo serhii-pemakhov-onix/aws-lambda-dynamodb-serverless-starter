@@ -18,6 +18,6 @@ const HTTP_METHODS = {
   POST,
   PUT,
   TRACE,
-};
+} as const;
 
 export default HTTP_METHODS;

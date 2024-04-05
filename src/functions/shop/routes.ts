@@ -1,9 +1,16 @@
 import { handlerPath } from '@libs/handler-resolver';
+import { GET, POST } from '@constants/http-method.constants';
+import EventOptionsFactory from '@libs/event-options-factory';
 
 type Route = {
-    handler: string;
-    events: any[];
+  handler: string;
+  events: any[];
 }
+
+const BASE_PATH = 'shops';
+const SWAGGER_TAG = 'Shops';
+
+const renderOptions = EventOptionsFactory.http({ path: BASE_PATH, swaggerTags: [SWAGGER_TAG] });
 
 export const create: Route = {
   /**
@@ -12,10 +19,10 @@ export const create: Route = {
   handler: `${handlerPath(__dirname)}/handler.create`,
   events: [
     {
-      http: {
-        method: 'post',
-        path: 'shop',
-      },
+      http: renderOptions({
+        method: POST,
+        bodyType: 'ShopCreateInput',
+      }),
     },
   ],
 };
@@ -27,10 +34,10 @@ export const getById: Route = {
   handler: `${handlerPath(__dirname)}/handler.getById`,
   events: [
     {
-      http: {
-        method: 'get',
-        path: 'shop/{shopId}',
-      },
+      http: renderOptions({
+        method: GET,
+        path: '{shopId}',
+      }),
     },
   ],
 

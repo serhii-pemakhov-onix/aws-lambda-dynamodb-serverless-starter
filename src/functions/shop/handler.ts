@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middify } from '@libs/lambda';
 import { shopService } from '../../services';
+import { ShopCreateInput } from './types';
 
 type APIGatewayProxyEventWithBody<TBody> = Omit<APIGatewayProxyEvent, 'body'> & { body: TBody };
 
@@ -30,7 +31,7 @@ const create = middify(
       },
     },
   },
-  async (event: APIGatewayProxyEventWithBody<any>): Promise<APIGatewayProxyResult> => {
+  async (event: APIGatewayProxyEventWithBody<ShopCreateInput>): Promise<APIGatewayProxyResult> => {
     const shop = await shopService.create({
       shopId: uuidv4(),
       email: event.body.email,

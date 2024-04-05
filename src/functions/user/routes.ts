@@ -1,9 +1,16 @@
 import { handlerPath } from '@libs/handler-resolver';
+import { GET, PATCH, POST } from '@constants/http-method.constants';
+import EventOptionsFactory from '@libs/event-options-factory';
 
 type Route = {
   handler: string;
   events: any[];
 }
+
+const BASE_PATH = 'users';
+const SWAGGER_TAG = 'Users';
+
+const renderOptions = EventOptionsFactory.http({ path: BASE_PATH, swaggerTags: [SWAGGER_TAG] });
 
 export const getAll: Route = {
   /**
@@ -12,11 +19,9 @@ export const getAll: Route = {
   handler: `${handlerPath(__dirname)}/handler.getAll`,
   events: [
     {
-      http: {
-        method: 'get',
-        path: 'user/',
-        swaggerTags: ['User'],
-      },
+      http: renderOptions({
+        method: GET,
+      }),
     },
   ],
 };
@@ -28,11 +33,10 @@ export const create: Route = {
   handler: `${handlerPath(__dirname)}/handler.create`,
   events: [
     {
-      http: {
-        method: 'post',
-        path: 'user',
+      http: renderOptions({
+        method: POST,
         bodyType: 'UserCreateInput',
-      },
+      }),
     },
   ],
 };
@@ -44,10 +48,10 @@ export const getById: Route = {
   handler: `${handlerPath(__dirname)}/handler.getById`,
   events: [
     {
-      http: {
-        method: 'get',
-        path: 'user/{userId}',
-      },
+      http: renderOptions({
+        method: GET,
+        path: '{userId}',
+      }),
     },
   ],
 };
@@ -59,10 +63,10 @@ export const getByEmail: Route = {
   handler: `${handlerPath(__dirname)}/handler.getByEmail`,
   events: [
     {
-      http: {
-        method: 'get',
-        path: 'user/email/{email}',
-      },
+      http: renderOptions({
+        method: GET,
+        path: 'email/{email}',
+      }),
     },
   ],
 };
@@ -74,10 +78,10 @@ export const setVerified: Route = {
   handler: `${handlerPath(__dirname)}/handler.setVerified`,
   events: [
     {
-      http: {
-        method: 'patch',
-        path: 'user/{userId}',
-      },
+      http: renderOptions({
+        method: PATCH,
+        path: '{userId}',
+      }),
     },
   ],
 };
