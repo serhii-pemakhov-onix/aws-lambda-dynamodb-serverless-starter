@@ -4,6 +4,8 @@
   "description": "Lambdas and DynamoDB",
   "main": "serverless.ts",
   "scripts": {
+    "deploy": "npx sls deploy",
+    "offline": "npx sls offline start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
