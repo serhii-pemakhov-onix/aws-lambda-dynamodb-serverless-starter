@@ -62,7 +62,7 @@ const getConfiguration = async (): Promise<AWS> => {
         bundle: true,
         minify: false,
         sourcemap: true,
-        exclude: ['aws-sdk'],
+        exclude: [],
         target: 'node18',
         define: { 'require.resolve': undefined },
         platform: 'node',
@@ -72,6 +72,7 @@ const getConfiguration = async (): Promise<AWS> => {
         title: 'NodeTeam',
         basePath: '/dev',
         typefiles: typeFileNames,
+        apiType: 'http',
       },
       'serverless-dynamodb': {
         start: {
