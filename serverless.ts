@@ -77,38 +77,42 @@ const serverlessConfiguration: AWS = {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
           TableName: 'UsersTable',
-          AttributeDefinitions: [{
-            AttributeName: 'userId',
-            AttributeType: 'S',
-          }, {
-            AttributeName: 'email',
-            AttributeType: 'S',
-          }],
+          AttributeDefinitions: [
+            {
+              AttributeName: 'userId',
+              AttributeType: 'S',
+            },
+            {
+              AttributeName: 'email',
+              AttributeType: 'S',
+            },
+          ],
           KeySchema: [{
             AttributeName: 'userId',
             KeyType: 'HASH',
           }],
-          GlobalSecondaryIndexes: [{
-            IndexName: 'email-index',
-            KeySchema: [{
-              AttributeName: 'email',
-              KeyType: 'HASH',
-            }, {
-              AttributeName: 'userId',
-              KeyType: 'RANGE',
-            }],
-            AttributeDefinitions: [{
-              AttributeName: 'email',
-              AttributeType: 'S',
-            }],
-            Projection: {
-              ProjectionType: 'ALL',
+          GlobalSecondaryIndexes: [
+            {
+              IndexName: 'email-index',
+              KeySchema: [
+                {
+                  AttributeName: 'email',
+                  KeyType: 'HASH',
+                },
+                {
+                  AttributeName: 'userId',
+                  KeyType: 'RANGE',
+                },
+              ],
+              Projection: {
+                ProjectionType: 'ALL',
+              },
+              ProvisionedThroughput: {
+                ReadCapacityUnits: 1,
+                WriteCapacityUnits: 1,
+              },
             },
-            ProvisionedThroughput: {
-              ReadCapacityUnits: 1,
-              WriteCapacityUnits: 1,
-            },
-          }],
+          ],
           ProvisionedThroughput: {
             ReadCapacityUnits: 1,
             WriteCapacityUnits: 1,
@@ -119,38 +123,44 @@ const serverlessConfiguration: AWS = {
         Type: 'AWS::DynamoDB::Table',
         Properties: {
           TableName: 'ShopsTable',
-          AttributeDefinitions: [{
-            AttributeName: 'shopId',
-            AttributeType: 'S',
-          }, {
-            AttributeName: 'name',
-            AttributeType: 'S',
-          }],
-          KeySchema: [{
-            AttributeName: 'shopId',
-            KeyType: 'HASH',
-          }],
-          GlobalSecondaryIndexes: [{
-            IndexName: 'name-index',
-            KeySchema: [{
-              AttributeName: 'name',
-              KeyType: 'HASH',
-            }, {
+          AttributeDefinitions: [
+            {
               AttributeName: 'shopId',
-              KeyType: 'RANGE',
-            }],
-            AttributeDefinitions: [{
+              AttributeType: 'S',
+            },
+            {
               AttributeName: 'name',
               AttributeType: 'S',
-            }],
-            Projection: {
-              ProjectionType: 'ALL',
             },
-            ProvisionedThroughput: {
-              ReadCapacityUnits: 1,
-              WriteCapacityUnits: 1,
+          ],
+          KeySchema: [
+            {
+              AttributeName: 'shopId',
+              KeyType: 'HASH',
             },
-          }],
+          ],
+          GlobalSecondaryIndexes: [
+            {
+              IndexName: 'name-index',
+              KeySchema: [
+                {
+                  AttributeName: 'name',
+                  KeyType: 'HASH',
+                },
+                {
+                  AttributeName: 'shopId',
+                  KeyType: 'RANGE',
+                },
+              ],
+              Projection: {
+                ProjectionType: 'ALL',
+              },
+              ProvisionedThroughput: {
+                ReadCapacityUnits: 1,
+                WriteCapacityUnits: 1,
+              },
+            },
+          ],
           ProvisionedThroughput: {
             ReadCapacityUnits: 1,
             WriteCapacityUnits: 1,
