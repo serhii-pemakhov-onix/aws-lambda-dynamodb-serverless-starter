@@ -1,8 +1,8 @@
 import { handlerPath } from '@libs/handler-resolver';
 
 type Route = {
-    handler: string;
-    events: any[];
+  handler: string;
+  events: any[];
 }
 
 export const getAll: Route = {

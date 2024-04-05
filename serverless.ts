@@ -23,7 +23,12 @@ import {
 const serverlessConfiguration: AWS = {
   service: 'NodeTeam',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild', 'serverless-dynamodb', 'serverless-auto-swagger', 'serverless-offline'],
+  plugins: [
+    'serverless-auto-swagger',
+    'serverless-esbuild',
+    'serverless-dynamodb',
+    'serverless-offline',
+  ],
   provider: {
     name: 'aws',
     runtime: 'nodejs18.x',

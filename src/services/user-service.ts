@@ -4,7 +4,7 @@ import User from '../model/User';
 export default class UserService {
   private TableName: string = 'UsersTable';
 
-  constructor(private docClient: DocumentClient) { }
+  constructor(private docClient: DocumentClient) {}
 
   async getAll(): Promise<User[]> {
     const users = await this.docClient.scan({
@@ -25,7 +25,7 @@ export default class UserService {
     return user.Item as User;
   }
 
-  async getByEmail(email: string): Promise<DocumentClient.AttributeMap[]> {
+  async getByEmail(email: string): Promise<DocumentClient.AttributeMap[] | undefined> {
     const user = await this.docClient.query({
       TableName: this.TableName,
       IndexName: 'email-index',
