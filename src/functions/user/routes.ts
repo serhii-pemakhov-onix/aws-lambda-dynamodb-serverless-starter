@@ -15,6 +15,7 @@ export const getAll: Route = {
       http: {
         method: 'get',
         path: 'user/',
+        swaggerTags: ['User'],
       },
     },
   ],
@@ -30,6 +31,7 @@ export const create: Route = {
       http: {
         method: 'post',
         path: 'user',
+        bodyType: 'UserCreateInput',
       },
     },
   ],

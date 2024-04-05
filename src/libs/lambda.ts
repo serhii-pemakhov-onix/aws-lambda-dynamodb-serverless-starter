@@ -3,7 +3,7 @@ import middyJsonBodyParser from '@middy/http-json-body-parser';
 import validator from '@middy/validator';
 import { transpileSchema } from '@middy/validator/transpile';
 
-export const middyfy = (schema, handler?) => {
+export const middify = (schema, handler?) => {
   if (typeof schema === 'object') {
     return middy(handler).use(middyJsonBodyParser()).use(
       validator({

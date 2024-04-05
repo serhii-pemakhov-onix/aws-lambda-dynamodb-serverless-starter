@@ -1,8 +1,9 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { v4 as uuidv4 } from 'uuid';
 import { formatJSONResponse } from '@libs/api-gateway';
-import { middyfy } from '@libs/lambda';
+import { middify } from '@libs/lambda';
 import { userService } from '../../services';
+import { UserCreateInput } from './types';
 
 type APIGatewayProxyEventWithBody<TBody> = Omit<APIGatewayProxyEvent, 'body'> & { body: TBody };
 
@@ -12,7 +13,7 @@ type APIGatewayProxyEventWithBody<TBody> = Omit<APIGatewayProxyEvent, 'body'> & 
  * @returns: { users: User[] }
  * @example: curl -X GET http://localhost:3000/dev/user/
  */
-const getAll = middyfy(async () => {
+const getAll = middify(async () => {
   const users = await userService.getAll();
 
   return formatJSONResponse({
@@ -26,7 +27,7 @@ const getAll = middyfy(async () => {
  * @returns: { user: User }
  * @example: curl -X POST http://localhost:3000/dev/user -d '{"email": "test@test"}'
  */
-const create = middyfy(
+const create = middify(
   {
     type: 'object',
     required: ['body'],
@@ -40,7 +41,7 @@ const create = middyfy(
       },
     },
   },
-  async (event: APIGatewayProxyEventWithBody<any>): Promise<APIGatewayProxyResult> => {
+  async (event: APIGatewayProxyEventWithBody<UserCreateInput>): Promise<APIGatewayProxyResult> => {
     const user = await userService.create({
       email: event.body.email,
       userId: uuidv4(),
@@ -59,7 +60,7 @@ const create = middyfy(
  * @returns: { user: User }
  * @example: curl -X GET http://localhost:3000/dev/user/123
  */
-const getById = middyfy(
+const getById = middify(
   {
     type: 'object',
     required: ['pathParameters'],
@@ -88,7 +89,7 @@ const getById = middyfy(
  * @returns: { user: User }
  * @example: curl -X GET http://localhost:3000/dev/user/email/test@test
  */
-const getByEmail = middyfy(
+const getByEmail = middify(
   {
     type: 'object',
     required: ['pathParameters'],
@@ -117,7 +118,7 @@ const getByEmail = middyfy(
  * @returns: { user: User }
  * @example: curl -X PUT http://localhost:3000/dev/user -d '{"email": "test@test"}'
  */
-const setVerified = middyfy(
+const setVerified = middify(
   {
     type: 'object',
     required: ['body'],
@@ -138,10 +139,10 @@ const setVerified = middyfy(
       },
     },
   },
-  async (event: APIGatewayProxyEventWithBody<any>): Promise<APIGatewayProxyResult> => {
+  async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     const user = await userService.setVerified({
       userId: event.pathParameters.userId,
-      isVerified: event.body.isVerified,
+      isVerified: true,
     });
 
     return formatJSONResponse({

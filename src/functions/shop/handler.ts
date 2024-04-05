@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { v4 as uuidv4 } from 'uuid';
 import { formatJSONResponse } from '@libs/api-gateway';
-import { middyfy } from '@libs/lambda';
+import { middify } from '@libs/lambda';
 import { shopService } from '../../services';
 
 type APIGatewayProxyEventWithBody<TBody> = Omit<APIGatewayProxyEvent, 'body'> & { body: TBody };
@@ -12,7 +12,7 @@ type APIGatewayProxyEventWithBody<TBody> = Omit<APIGatewayProxyEvent, 'body'> & 
  * @returns: { shop: Shop }
  * @example: curl -X POST http://localhost:3000/dev/shop -d '{"email": "test@test"}'
  */
-const create = middyfy(
+const create = middify(
   {
     type: 'object',
     required: ['body'],
@@ -52,7 +52,7 @@ const create = middyfy(
  * @returns: { shop: Shop }
  * @example: curl -X GET http://localhost:3000/dev/shop/123
  */
-const getById = middyfy(
+const getById = middify(
   {
     type: 'object',
     required: ['pathParameters'],

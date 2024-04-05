@@ -1,7 +1,7 @@
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { formatJSONResponse } from '@libs/api-gateway';
-import { middyfy } from '@libs/lambda';
+import { middify } from '@libs/lambda';
 
 const ses = new SESClient({
   region: 'us-west-2',
@@ -18,7 +18,7 @@ type APIGatewayProxyEventWithBody<TBody> = Omit<APIGatewayProxyEvent, 'body'> & 
  * @description: Send Mail
  * @example: curl -X POST http://localhost:3000/dev/mail -d '{"to": "test@test"}'
  */
-const sendMail = middyfy(
+const sendMail = middify(
   {
     type: 'object',
     required: ['body'],
