@@ -25,5 +25,9 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'no-extra-semi': 'off',
     'dot-notation': 'off',
+    'max-len': [
+      'error',
+      150,
+    ],
   },
 };
