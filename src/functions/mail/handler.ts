@@ -4,7 +4,7 @@ import { formatJSONResponse } from '@libs/api-gateway';
 import { middify } from '@libs/lambda';
 
 const ses = new SESClient({
-  region: 'us-west-2',
+  region: 'us-east-1',
   credentials: {
     accessKeyId: 'MockAccessKeyId',
     secretAccessKey: 'MockSecretAccessKey',

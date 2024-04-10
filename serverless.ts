@@ -1,5 +1,20 @@
 import type { AWS } from '@serverless/typescript';
 import scanFs from '@libs/fs-scanner';
+import { ref } from '@libs/ref-factory';
+
+import { EventBridge } from '@resources/event-bridge/event-bridge';
+
+// S3
+import { Bucket } from '@resources/s3/s3';
+
+// DynamoDB Tables
+import { UsersTable } from '@resources/dynamodb/users-table';
+import { ShopsTable } from '@resources/dynamodb/shops-table';
+import { FilesTable, FilesTableName, FilesTableArn } from '@resources/dynamodb/files-table';
+
+// Authorizer
+import { getUploadUrlAuthorizer } from '@functions/authorizer/upload/config';
+// import { getDownloadUrlAuthorizer } from '@functions/authorizer/download/config';
 
 // User
 import {
@@ -17,9 +32,10 @@ import {
 } from '@functions/shop/routes';
 
 // Mail
-import {
-  sendMail,
-} from '@functions/mail/routes';
+import { sendMail } from '@functions/mail/routes';
+
+// File
+import { getSignedUploadUrl, listFiles } from '@functions/file/routes';
 
 const TYPE_FILE_PATTERN = './src/**/*.d.ts';
 
@@ -30,6 +46,7 @@ const getConfiguration = async (): Promise<AWS> => {
     service: 'NodeTeam',
     frameworkVersion: '3',
     plugins: [
+      'serverless-dotenv-plugin',
       'serverless-auto-swagger',
       'serverless-esbuild',
       'serverless-dynamodb',
@@ -47,6 +64,9 @@ const getConfiguration = async (): Promise<AWS> => {
       },
     },
     functions: {
+      // getDownloadUrlAuthorizer,
+      getUploadUrlAuthorizer,
+      getSignedUploadUrl,
       usersGetAll,
       usersCreate,
       usersGetById,
@@ -55,6 +75,7 @@ const getConfiguration = async (): Promise<AWS> => {
       shopsCreate,
       shopsGetById,
       sendMail,
+      listFiles,
     },
     package: { individually: true },
     custom: {
@@ -73,6 +94,7 @@ const getConfiguration = async (): Promise<AWS> => {
         basePath: '/dev',
         typefiles: typeFileNames,
         apiType: 'http',
+        apiKeyHeaders: ['Authorization'],
       },
       'serverless-dynamodb': {
         start: {
@@ -83,103 +105,30 @@ const getConfiguration = async (): Promise<AWS> => {
           dbPath: '../.dynamodb',
         },
       },
+      bucketName: ref({ Bucket }),
+      filesTableName: ref({ FilesTable }),
+      filesTableStreamArn: { 'Fn::GetAtt': ['FilesTable', 'StreamArn'] },
+      filesTableArn: { 'Fn::GetAtt': ['FilesTable', 'Arn'] },
+      eventBridgeArn: 'arn:aws:events:#{AWS::Region}:#{AWS::AccountId}:event-bus/NodeTeam',
+      eventBusName: ref({ EventBridge }),
+      getSignedDownloadUrlArn: {
+        'Fn::GetAtt': ['GetSignedDownloadUrlLambdaFunction', 'Arn'],
+      },
+      getSignedUploadUrlArn: {
+        'Fn::GetAtt': ['GetSignedUploadUrlLambdaFunction', 'Arn'],
+      },
     },
     resources: {
       Resources: {
-        UsersTable: {
-          Type: 'AWS::DynamoDB::Table',
-          Properties: {
-            TableName: 'UsersTable',
-            AttributeDefinitions: [
-              {
-                AttributeName: 'userId',
-                AttributeType: 'S',
-              },
-              {
-                AttributeName: 'email',
-                AttributeType: 'S',
-              },
-            ],
-            KeySchema: [{
-              AttributeName: 'userId',
-              KeyType: 'HASH',
-            }],
-            GlobalSecondaryIndexes: [
-              {
-                IndexName: 'email-index',
-                KeySchema: [
-                  {
-                    AttributeName: 'email',
-                    KeyType: 'HASH',
-                  },
-                  {
-                    AttributeName: 'userId',
-                    KeyType: 'RANGE',
-                  },
-                ],
-                Projection: {
-                  ProjectionType: 'ALL',
-                },
-                ProvisionedThroughput: {
-                  ReadCapacityUnits: 1,
-                  WriteCapacityUnits: 1,
-                },
-              },
-            ],
-            ProvisionedThroughput: {
-              ReadCapacityUnits: 1,
-              WriteCapacityUnits: 1,
-            },
-          },
-        },
-        ShopsTable: {
-          Type: 'AWS::DynamoDB::Table',
-          Properties: {
-            TableName: 'ShopsTable',
-            AttributeDefinitions: [
-              {
-                AttributeName: 'shopId',
-                AttributeType: 'S',
-              },
-              {
-                AttributeName: 'name',
-                AttributeType: 'S',
-              },
-            ],
-            KeySchema: [
-              {
-                AttributeName: 'shopId',
-                KeyType: 'HASH',
-              },
-            ],
-            GlobalSecondaryIndexes: [
-              {
-                IndexName: 'name-index',
-                KeySchema: [
-                  {
-                    AttributeName: 'name',
-                    KeyType: 'HASH',
-                  },
-                  {
-                    AttributeName: 'shopId',
-                    KeyType: 'RANGE',
-                  },
-                ],
-                Projection: {
-                  ProjectionType: 'ALL',
-                },
-                ProvisionedThroughput: {
-                  ReadCapacityUnits: 1,
-                  WriteCapacityUnits: 1,
-                },
-              },
-            ],
-            ProvisionedThroughput: {
-              ReadCapacityUnits: 1,
-              WriteCapacityUnits: 1,
-            },
-          },
-        },
+        Bucket,
+        EventBridge,
+        FilesTable,
+        ShopsTable,
+        UsersTable,
+      },
+      Outputs: {
+        FilesTableName,
+        FilesTableArn,
       },
     },
   };

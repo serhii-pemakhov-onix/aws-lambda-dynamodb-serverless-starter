@@ -6,24 +6,32 @@
   "scripts": {
     "deploy": "npx sls deploy",
     "offline": "npx sls offline start",
+    "print": "npx sls print",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
     "node": ">=14.15.0"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.549.0",
+    "@aws-sdk/client-s3": "^3.550.0",
     "@aws-sdk/client-ses": "^3.478.0",
+    "@aws-sdk/s3-presigned-post": "^3.550.0",
     "@middy/core": "^3.4.0",
     "@middy/http-json-body-parser": "^3.4.0",
     "@middy/validator": "^5.1.0",
+    "dynamodb-toolbox": "^0.9.2",
+    "http-errors": "^2.0.0",
+    "install": "^0.13.0",
+    "npm": "^10.5.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "serverless-auto-swagger": "^2.12.0",
-    "serverless-dynamodb": "^0.2.47",
     "@types/aws-lambda": "^8.10.71",
     "@types/glob": "^8.1.0",
+    "@types/http-errors": "^2.0.4",
     "@types/node": "^14.14.25",
+    "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^6.15.0",
     "@typescript-eslint/parser": "^6.15.0",
     "cz-conventional-changelog": "^3.3.0",
@@ -33,6 +41,9 @@
     "eslint-plugin-import": "^2.29.1",
     "json-schema-to-ts": "^1.5.0",
     "serverless": "^3.0.0",
+    "serverless-auto-swagger": "^2.12.0",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-dynamodb": "^0.2.47",
     "serverless-dynamodb-local": "^0.2.40",
     "serverless-esbuild": "^1.23.3",
     "serverless-offline": "^13.3.2",

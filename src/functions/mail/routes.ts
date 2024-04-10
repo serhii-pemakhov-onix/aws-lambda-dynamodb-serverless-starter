@@ -1,11 +1,7 @@
+import { Route } from '@common-types/route.type';
 import { POST } from '@constants/http-method.constants';
 import EventOptionsFactory from '@libs/event-options-factory';
 import { handlerPath } from '@libs/handler-resolver';
-
-type Route = {
-  handler: string;
-  events: any[];
-}
 
 const BASE_PATH = 'mail';
 const SWAGGER_TAG = 'Mail';

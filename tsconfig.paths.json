@@ -2,8 +2,14 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
+      "@common-types/*": [
+        "src/types/*"
+      ],
       "@constants/*": [
         "src/constants/*"
+      ],
+      "@entities/*": [
+        "src/entities/*"
       ],
       "@functions/*": [
         "src/functions/*"
@@ -11,8 +17,14 @@
       "@libs/*": [
         "src/libs/*"
       ],
-      "@common-types/*": [
-        "src/types/*"
+      "@model/*": [
+        "src/model/*"
+      ],
+      "@resources/*": [
+        "src/resources/*"
+      ],
+      "@services/*": [
+        "src/services/*"
       ]
     }
   }

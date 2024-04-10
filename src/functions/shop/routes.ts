@@ -1,11 +1,7 @@
 import { handlerPath } from '@libs/handler-resolver';
 import { GET, POST } from '@constants/http-method.constants';
 import EventOptionsFactory from '@libs/event-options-factory';
-
-type Route = {
-  handler: string;
-  events: any[];
-}
+import { Route } from '@common-types/route.type';
 
 const BASE_PATH = 'shops';
 const SWAGGER_TAG = 'Shops';
