@@ -1,23 +1,17 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
-import { S3Client } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { v4 as uuidv4 } from 'uuid';
 import * as createHttpError from 'http-errors';
 import File from '@model/File';
 import { getFileSizeLimit, kB } from '@libs/file-size';
+import { S3ClientSingleton } from '@libs/s3-client-singleton';
 
 const URL_EXPIRES_IN_MS = 300;
 
 export default class FileService {
   private TableName: string = 'FilesTable';
 
-  private s3Client = new S3Client({
-    region: 'us-east-1',
-    credentials: {
-      accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
-      secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
-    },
-  });
+  private s3Client = S3ClientSingleton.getClient();
 
   constructor(private docClient: DocumentClient) {}
 
