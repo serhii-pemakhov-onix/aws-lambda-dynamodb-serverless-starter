@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as createHttpError from 'http-errors';
 import File from '@model/File';
 import { getFileSizeLimit, kB } from '@libs/file-size';
-import { S3ClientSingleton } from '@libs/s3-client-singleton';
+import { S3ClientSingleton } from '@libs/aws-clients/s3-client.singleton';
 
 const URL_EXPIRES_IN_MS = 300;
 

@@ -35,7 +35,7 @@ import {
 import { sendMail } from '@functions/mail/routes';
 
 // File
-import { getSignedUploadUrl, listFiles } from '@functions/file/routes';
+import { getSignedUploadUrl, listFiles } from '@functions/file/crud/routes';
 
 const TYPE_FILE_PATTERN = './src/**/*.d.ts';
 

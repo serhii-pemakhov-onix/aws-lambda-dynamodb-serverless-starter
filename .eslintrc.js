@@ -24,6 +24,7 @@ module.exports = {
     'no-empty-function': 'off',
     'import/no-extraneous-dependencies': 'off',
     'no-extra-semi': 'off',
+    'no-console': 'off',
     'dot-notation': 'off',
     'max-len': [
       'error',
