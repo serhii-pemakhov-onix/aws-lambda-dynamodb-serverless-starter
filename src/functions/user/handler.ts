@@ -2,7 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { v4 as uuidv4 } from 'uuid';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middify } from '@libs/lambda';
-import { userService } from '../../services';
+import { userService } from '@services/index';
 import { UserCreateInput } from './types';
 
 type APIGatewayProxyEventWithBody<TBody> = Omit<APIGatewayProxyEvent, 'body'> & { body: TBody };

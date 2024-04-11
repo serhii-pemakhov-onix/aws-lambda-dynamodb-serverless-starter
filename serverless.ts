@@ -36,6 +36,8 @@ import { sendMail } from '@functions/mail/routes';
 
 // File
 import { getSignedUploadUrl, listFiles } from '@functions/file/crud/routes';
+import { dispatchFileUploadedEvent } from '@functions/file/dispatch-file-uploaded-event/config';
+import { onFileUploaded } from '@functions/file/on-file-uploaded/config';
 
 const TYPE_FILE_PATTERN = './src/**/*.d.ts';
 
@@ -62,20 +64,48 @@ const getConfiguration = async (): Promise<AWS> => {
       environment: {
         AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       },
+      iamRoleStatements: [
+        {
+          Effect: 'Allow',
+          Resource: [
+            {
+              'Fn::Join': ['', [{ 'Fn::GetAtt': ['Bucket', 'Arn'] }, '/*']],
+            },
+          ],
+          Action: ['s3:PutObject', 's3:GetObject', 's3:DeleteObject'],
+        },
+        {
+          Effect: 'Allow',
+          Resource: [{ 'Fn::GetAtt': ['FilesTable', 'Arn'] }],
+          Action: [
+            'dynamodb:Query',
+            'dynamodb:GetItem',
+            'dynamodb:DeleteItem',
+            'dynamodb:PutItem',
+          ],
+        },
+        {
+          Effect: 'Allow',
+          Resource: [{ 'Fn::GetAtt': ['EventBridge', 'Arn'] }],
+          Action: ['events:PutEvents'],
+        },
+      ],
     },
     functions: {
+      dispatchFileUploadedEvent,
       // getDownloadUrlAuthorizer,
       getUploadUrlAuthorizer,
       getSignedUploadUrl,
-      usersGetAll,
-      usersCreate,
-      usersGetById,
-      usersGetByEmail,
+      listFiles,
+      onFileUploaded,
       setVerifiedUser,
       shopsCreate,
       shopsGetById,
       sendMail,
-      listFiles,
+      usersCreate,
+      usersGetAll,
+      usersGetById,
+      usersGetByEmail,
     },
     package: { individually: true },
     custom: {

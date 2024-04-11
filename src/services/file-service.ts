@@ -9,7 +9,7 @@ import { S3ClientSingleton } from '@libs/aws-clients/s3-client.singleton';
 const URL_EXPIRES_IN_MS = 300;
 
 export default class FileService {
-  private TableName: string = 'FilesTable';
+  private TableName: string = 'FilesTable1';
 
   private s3Client = S3ClientSingleton.getClient();
 
@@ -35,10 +35,14 @@ export default class FileService {
   }
 
   async create(file: File): Promise<File> {
+    console.log(`file: ${JSON.stringify(file, null, 4)}`);
+    const { filePrefix: fileId, ...rest } = file;
+
     await this.docClient.put({
       TableName: this.TableName,
       Item: {
-        ...file,
+        ...rest,
+        fileId,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
@@ -61,7 +65,7 @@ export default class FileService {
       this.s3Client,
       {
         Bucket: process.env.BUCKET_NAME,
-        Key: `${filePrefix}_${fileName}`,
+        Key: `${filePrefix}/${fileName}`,
         Fields: {
           'x-amz-storage-class': 'INTELLIGENT_TIERING',
         },

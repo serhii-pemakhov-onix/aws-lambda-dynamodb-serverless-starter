@@ -4,17 +4,16 @@ import { S3Event, S3EventRecord } from 'aws-lambda';
 import { makeTokenizer } from '@tokenizer/s3';
 import { fileTypeFromTokenizer } from 'file-type';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
-import { isEmpty } from '@libs/is-empty-object';
 import { PutEventsCommand } from '@aws-sdk/client-eventbridge';
+import { S4_EVENTS } from '@constants/eventbridge.constants';
 
 const S3Client = S3ClientSingleton.getClient();
 const eventBridge = EventBridgeClientSingleton.getClient();
 
 const urlDecode = (url: string) => decodeURIComponent(url.replace(/\+/g, ' '));
 
-const dispatchFileUploadedEvent = (event: S3Event) => async () => {
-  const putEventsPayload = {};
-  await Promise.all(
+const dispatchFileUploadedEvent = async (event: S3Event) => {
+  const eventPayloads = await Promise.all(
     event.Records.map(async (eventRecord: S3EventRecord) => {
       const bucketName = eventRecord.s3.bucket.name;
       const objectKey = urlDecode(eventRecord.s3.object.key);
@@ -42,12 +41,12 @@ const dispatchFileUploadedEvent = (event: S3Event) => async () => {
           console.error('Error deleting found inconsistent object:', error);
         }
 
-        return;
+        return null;
       }
 
-      const newEvent = {
-        Source: 's4-events',
-        DetailType: 'FILE_UPLOADED',
+      return {
+        Source: S4_EVENTS.SOURCE,
+        DetailType: S4_EVENTS.DETAIL_TYPES.FILE_UPLOADED,
         Detail: JSON.stringify({
           bucketName,
           fileName,
@@ -57,12 +56,13 @@ const dispatchFileUploadedEvent = (event: S3Event) => async () => {
         }),
         EventBusName: process.env.EVENT_BUS_NAME,
       };
-      putEventsPayload[filePrefix] = newEvent;
     }),
   );
 
-  if (!isEmpty(putEventsPayload)) {
-    const params = { Entries: Object.values(putEventsPayload) };
+  const entries = eventPayloads.filter((x) => x);
+
+  if (entries.length) {
+    const params = { Entries: entries };
 
     try {
       await eventBridge.send(new PutEventsCommand(params));
