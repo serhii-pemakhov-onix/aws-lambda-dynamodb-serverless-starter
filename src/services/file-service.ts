@@ -5,11 +5,12 @@ import * as createHttpError from 'http-errors';
 import File from '@model/File';
 import { getFileSizeLimit, kB } from '@libs/file-size';
 import { S3ClientSingleton } from '@libs/aws-clients/s3-client.singleton';
+import { TABLE_NAMES } from '@constants/dynamodb.constants';
 
 const URL_EXPIRES_IN_MS = 300;
 
 export default class FileService {
-  private TableName: string = 'FilesTable1';
+  private TableName: string = TABLE_NAMES.FILES;
 
   private s3Client = S3ClientSingleton.getClient();
 

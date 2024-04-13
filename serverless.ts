@@ -10,7 +10,7 @@ import { Bucket } from '@resources/s3/s3';
 // DynamoDB Tables
 import { UsersTable } from '@resources/dynamodb/users-table';
 import { ShopsTable } from '@resources/dynamodb/shops-table';
-import { FilesTable, FilesTableName, FilesTableArn } from '@resources/dynamodb/files-table';
+import { FilesTable } from '@resources/dynamodb/files-table';
 
 // Authorizer
 import { getUploadUrlAuthorizer } from '@functions/authorizer/upload/config';
@@ -93,7 +93,6 @@ const getConfiguration = async (): Promise<AWS> => {
     },
     functions: {
       dispatchFileUploadedEvent,
-      // getDownloadUrlAuthorizer,
       getUploadUrlAuthorizer,
       getSignedUploadUrl,
       listFiles,
@@ -155,10 +154,6 @@ const getConfiguration = async (): Promise<AWS> => {
         FilesTable,
         ShopsTable,
         UsersTable,
-      },
-      Outputs: {
-        FilesTableName,
-        FilesTableArn,
       },
     },
   };
